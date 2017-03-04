@@ -1,4 +1,4 @@
 .httr-oauth
 .ipynb_checkpoints
-.data
-.wordvec
+data
+wordvec
