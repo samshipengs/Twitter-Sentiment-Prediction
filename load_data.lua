@@ -3,18 +3,18 @@ require 'paths'
 
 mnist = {}
 
-mnist.path_remote = 'https://s3.amazonaws.com/torch7/data/mnist.t7.tgz'
-mnist.path_dataset = 'mnist.t7'
-mnist.path_trainset = paths.concat(mnist.path_dataset, 'train_32x32.t7')
-mnist.path_testset = paths.concat(mnist.path_dataset, 'test_32x32.t7')
+-- mnist.path_remote = 'https://s3.amazonaws.com/torch7/data/mnist.t7.tgz'
+-- mnist.path_dataset = 'mnist.t7'
+-- mnist.path_trainset = paths.concat(mnist.path_dataset, 'train_32x32.t7')
+-- mnist.path_testset = paths.concat(mnist.path_dataset, 'test_32x32.t7')
 
-function mnist.download()
-   if not paths.filep(mnist.path_trainset) or not paths.filep(mnist.path_testset) then
-      local remote = mnist.path_remote
-      local tar = paths.basename(remote)
-      os.execute('wget ' .. remote .. '; ' .. 'tar xvf ' .. tar .. '; rm ' .. tar)
-   end
-end
+-- function mnist.download()
+--    if not paths.filep(mnist.path_trainset) or not paths.filep(mnist.path_testset) then
+--       local remote = mnist.path_remote
+--       local tar = paths.basename(remote)
+--       os.execute('wget ' .. remote .. '; ' .. 'tar xvf ' .. tar .. '; rm ' .. tar)
+--    end
+-- end
 
 function mnist.loadTrainSet(maxLoad, n_bag, geometry)
    return mnist.loadDataset(mnist.path_trainset, maxLoad, n_bag, geometry)
