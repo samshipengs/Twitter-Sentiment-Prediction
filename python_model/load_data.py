@@ -90,28 +90,35 @@ class Data:
 		return df['size'].max() 
 
 	# initialize empty arry to fill with vector repsentation
-	def convert2vec(self, df, max_length, model):
-		tweet_tokens = df['tokenized']
-		n = tweet_tokens.shape[0]
-		m = max_length
-		n_absent = 0
-		tweet_vecs = np.zeros((n,m,self.vec_size))
-		vocabs = model.wv.vocab.keys()
-		for i in range(n):
-			token_i = [x for x in tweet_tokens[i] if x in vocabs]
-			m_i = len(token_i)
-			if m_i == 0:
-			    n_absent += 1
-			else:
-				diff_i = abs(m_i - m)
-				vecs_i = model[token_i]
-				tweet_vecs[i] = np.lib.pad(vecs_i, ((0,diff_i),(0,0)), 'constant', constant_values=0)
-		print "Done converting tweets to vec!"
-		print "Total {} not in vocab.".format(n_absent)
-		return tweet_vecs
+	def convert2vec(self, df, max_length, model, name='default'):
+		file_name = self.FILE_PATH + name
+		if os.path.isfile(file_name + '.npy'):
+			print "npy already exists, loading ..."
+			tweet_vecs = np.load(file_name + '.npy')
+			print "Done loading npy file."
+			return tweet_vecs
+		else:
+			tweet_tokens = df['tokenized']
+			n = tweet_tokens.shape[0]
+			m = max_length
+			n_absent = 0
+			tweet_vecs = np.zeros((n,m,self.vec_size))
+			vocabs = model.wv.vocab.keys()
+			for i in range(n):
+				token_i = [x for x in tweet_tokens[i] if x in vocabs]
+				m_i = len(token_i)
+				if m_i == 0:
+				    n_absent += 1
+				else:
+					diff_i = abs(m_i - m)
+					vecs_i = model[token_i]
+					tweet_vecs[i] = np.lib.pad(vecs_i, ((0,diff_i),(0,0)), 'constant', constant_values=0)
+			print "Total {} not in vocab.".format(n_absent)
+			print "Done converting tweets to vec!"	
+			return tweet_vecs
 
 	# save tweet_vecs to disk in npy
-	def save_vec(self, tweet_vecs, name):
+	def save_vec(self, tweet_vecs, name='default'):
 		file_name = self.FILE_PATH + name
 		if os.path.isfile(file_name + '.npy') and os.path.isfile(file_name + '.npz'):
 			print "npy already exists."
