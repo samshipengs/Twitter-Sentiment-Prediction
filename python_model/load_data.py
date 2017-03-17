@@ -65,7 +65,8 @@ class Data:
 		df['tokenized'] = df['tokenized'].apply(lambda x: [item for item in x if item not in stop_words])
 
 		# now let us bring in the wordvec trained using text8 dataset
-	def build_wordvec(self, model_name='tweets.model.bin', size = 200):
+	def build_wordvec(self, size = 200):
+		model_name='tweets' + str(size) + '.model.bin'
 		self.vec_size = size
 		sentences = word2vec.Text8Corpus(self.FILE_PATH + 'data/text8') # use text 8
 		model_path = self.FILE_PATH + 'wordvec/' + model_name
