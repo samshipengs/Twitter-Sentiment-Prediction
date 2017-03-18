@@ -11,10 +11,8 @@ from collections import Counter
 import itertools
 from nltk.corpus import stopwords
 import os.path
+import random
 
-
-# FILE_PATH = '/home/sam/Hhd/twitter_sentiment/'
-FILE_PATH = '/home/sam/Data/twitter_sentiment/'
 
 class Data:
 	def __init__(self, file_name, file_path):
@@ -25,7 +23,6 @@ class Data:
 	# def function to load data from json to dataframe
 	def json_df(self, json_fields):
 	    print "Loading json: " + self.file_name + " ..."
-	    # data_path = FILE_PATH + 'data/'
 	    data_df = pd.read_json(self.data_path + self.file_name, lines=True)
 	    # we only take the 'text' column
 	    drop_columns = list(data_df.columns)
@@ -64,7 +61,7 @@ class Data:
 		#     print "sample stopping words: ", stop_words[:5]
 		df['tokenized'] = df['tokenized'].apply(lambda x: [item for item in x if item not in stop_words])
 
-		# now let us bring in the wordvec trained using text8 dataset
+	# now let us bring in the wordvec trained using text8 dataset
 	def build_wordvec(self, size = 200):
 		model_name='tweets' + str(size) + '.model.bin'
 		self.vec_size = size
@@ -127,3 +124,37 @@ class Data:
 			np.save(file_name, tweet_vecs)
 			np.savez(file_name, tweet_vecs)
 			print "Saved {} to disk.".format(name)
+	
+	# drop rows whose col equals to certain value, this is used to drop neutral classes
+	def drop_value(self, df, col, value):
+		try:
+			df_dropped = df.drop(df[df[col]==value].index)
+			df_clean = df_dropped.reset_index(drop=True)
+
+			print "Dropped {} on column {}".format(value, col)
+			return df_clean
+		except :
+			raise Exception("droping does not work might be column intented to drop does not exist.")
+
+	# replace a categorical value column to numeric column based on a given dictionary
+	def cat2num(self, df, col1, col2, value_dict):
+		# class_label = {'positive': 1, 'negative': 2}
+		col2 = col2 or col1 # default remain the same name
+		print col2
+		df[col2] = df[col1].apply(lambda x: value_dict[x])
+		df.drop(col1, inplace=True, axis=1)
+		print "Done converting categorical to numeric, this changes df."
+		return df
+
+	# balance classes, the method used here is just drop the most number of classes to the 
+	# second most numer of class
+	def balance_class(self, df, random_state=42):
+		class_counts = df['class'].value_counts()
+		n_top1 = class_counts.values[0]
+		n_top2 = class_counts.values[1]
+		random.seed(random_state)
+		drop_n_top1 = random.sample(range(n_top1), n_top1-n_top2) # sample without replacement
+		n_top1_index = df[df['class']==class_counts.index[0]].index.values
+		df.drop(n_top1_index[drop_n_top1], axis=0, inplace=True)
+		df = df.reset_index(drop=True)
+		return df
