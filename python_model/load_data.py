@@ -43,7 +43,7 @@ class Data:
 
 	# pre-processing text
 	def pre_process(self, df):
-		print("Note: pre_process changes the dataframe inplace.")
+		print("Note: pre-process changes the dataframe inplace.")
 		# remove new line char
 		df['text'].replace(regex=True,inplace=True,to_replace=r'\\n',value=r'')
 		# remove https links
@@ -58,11 +58,16 @@ class Data:
 		stop_words = stopwords.words('english')
 		add_stop_words = ['amp', 'rt']
 		stop_words += add_stop_words
+		# also remove english names
+		last_names = [x.lower() for x in np.loadtxt(self.FILE_PATH+"last_names.txt", usecols=0, dtype=str)[:5000]]
+		stop_words += last_names
+		first_names = [x.lower() for x in np.loadtxt(self.FILE_PATH+"first_names.txt", usecols=0, dtype=str)]
+		stop_words += first_names
 		#     print "sample stopping words: ", stop_words[:5]
 		df['tokenized'] = df['tokenized'].apply(lambda x: [item for item in x if item not in stop_words])
 
 	# now let us bring in the wordvec trained using text8 dataset
-	def build_wordvec(self, size = 200):
+	def build_wordvec(self, size = 200, verbose=True):
 		model_name='tweets' + str(size) + '.model.bin'
 		self.vec_size = size
 		sentences = word2vec.Text8Corpus(self.FILE_PATH + 'data/text8') # use text 8
@@ -71,7 +76,8 @@ class Data:
 			print "Loading existing model {} ...".format(model_name)
 			model = word2vec.Word2Vec.load(model_path)
 		else:
-			logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+			if verbose:
+				logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 			print "Training for {} ...".format(model_name)
 			model = word2vec.Word2Vec(sentences, size=self.vec_size, sg=1, workers=4)
 			model.save(model_path)
@@ -137,15 +143,26 @@ class Data:
 			raise Exception("droping does not work might be column intented to drop does not exist.")
 
 	# replace a categorical value column to numeric column based on a given dictionary
-	def cat2num(self, df, col1, col2, value_dict):
+	def cat2num(self, df, col1, value_dict, col2=None):
 		# class_label = {'positive': 1, 'negative': 2}
 		col2 = col2 or col1 # default remain the same name
 		print col2
 		df[col2] = df[col1].apply(lambda x: value_dict[x])
-		df.drop(col1, inplace=True, axis=1)
+		if col2 != col1:
+			df.drop(col1, inplace=True, axis=1)
 		print "Done converting categorical to numeric, this changes df."
 		return df
 
+	# convert numberic value back to categorical value based on a given dictionary	
+	def num2cat(self, df, col1, value_dict, col2=None):
+		# class_label = {1:'positive', 2: 'neutral', 3: 'negative'}
+		col2 = col2 or col1 # default remain the same name
+		print col2
+		df[col2] = df[col1].apply(lambda x: value_dict[x])
+		if col2 != col1:
+			df.drop(col1, inplace=True, axis=1)
+		print "Done converting categorical to numeric, this changes df."
+		return df
 	# balance classes, the method used here is just drop the most number of classes to the 
 	# second most numer of class
 	def balance_class(self, df, random_state=42):
