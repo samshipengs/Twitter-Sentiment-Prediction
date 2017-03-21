@@ -2,24 +2,26 @@
 Analyze sentiment of tweets i.e. positive, negative and neutral by applying *convolution neural network* on vector representations of words using *Word2Vec*. US Airline data is used in the demonstration.
 
 ### Data
+--------
 [Airline Twitter sentiment](https://www.crowdflower.com/data-for-everyone/)
 >Twitter data was scraped from February of 2015 and contributors were asked to first classify positive, negative, and neutral tweets, followed by categorizing negative reasons (such as “late flight” or “rude service”).
 
 ### Prerequisites
-
+-----------------
 * [lasagne](http://lasagne.readthedocs.io/en/latest/user/installation.html) - Create conv-net
 * [nltk](http://www.nltk.org/install.html) - Data pre-processing
 * [sklearn](http://scikit-learn.org/stable/install.html) - Provide useful tools e.g. stratified cross-validation
 
 
 ### Getting Started
-
+-------------------
 Begin by creating a directory e.g. *twitter_sentiment* for stroing training data, Word2Vec model and CNN model, and set the FILE_PATH to this directory.
 * data: contains training data (airline data in this case) and test data.
 * word2vec: word embedding model is saved here.
 * model: cnn model is saved here.
 
 ### Run
+-------
 train cnn using *model_airline*,
 ```
 jupyter notebook model_airline.ipynb
@@ -31,6 +33,7 @@ make predictions on twitter data,
 jupyter notebook predictions.ipynb
 ```
 ### Example
+-----------
 ```python
 airline_data = Data('Airline-Sentiment-2-w-AA.csv', FILE_PATH)
 airline_df = airline_data.csv_df(['airline_sentiment', 'text']) # load data
@@ -142,4 +145,5 @@ AC.check(word='worst', sentiment=3, n_view=10)
 This could help airline to improve on relevant services.
 
 ### Reference
+-------------
 [Convolutional Neural Networks for Sentence Classification](https://arxiv.org/pdf/1408.5882.pdf)
