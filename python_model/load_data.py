@@ -161,7 +161,7 @@ class Data:
 		df[col2] = df[col1].apply(lambda x: value_dict[x])
 		if col2 != col1:
 			df.drop(col1, inplace=True, axis=1)
-		print "Done converting categorical to numeric, this changes df."
+		print "Done converting numeric to categorical, this changes df."
 		return df
 	# balance classes, the method used here is just drop the most number of classes to the 
 	# second most numer of class
