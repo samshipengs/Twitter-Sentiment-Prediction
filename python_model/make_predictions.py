@@ -31,8 +31,8 @@ class GenerateData:
 		model = test_data.build_wordvec(size=wv_size, verbose=False)
 		# take a look of the max_len of testing. although we still have to use max_len from train
 		max_len_test = test_data.max_len(test_df)
-		data = test_data.convert2vec(test_df, self.max_len_train, model, name='test')
-		test_data.save_vec(data, name='test')
+		data = test_data.convert2vec(test_df, self.max_len_train, model, name='test_'+self.file_name)
+		test_data.save_vec(data, name='test_'+self.file_name)
 
 		self.data = data
 		self.test_data = test_data
@@ -43,16 +43,16 @@ class GenerateData:
 	### load trained model and make predictions
 	def cnn(self, M, D, input_var=None):
 		network = lasagne.layers.InputLayer(shape=(None, 1, M, D), input_var=input_var)
-		network = lasagne.layers.Conv2DLayer(network, num_filters=10, filter_size=(3, 3), \
+		network = lasagne.layers.Conv2DLayer(network, num_filters=50, filter_size=(3, 3), \
 		                                     nonlinearity=lasagne.nonlinearities.rectify, \
-		                                     W=lasagne.init.GlorotUniform(), pad=0, stride=(1, 1), \
+		                                     W=lasagne.init.GlorotUniform(), pad=1, stride=(1, 1), \
 		                                     untie_biases=True)
 		network = lasagne.layers.MaxPool2DLayer(network, pool_size=(2, 2))
-		network = lasagne.layers.Conv2DLayer(network, num_filters=10, filter_size=(3, 3), \
-		                                     nonlinearity=lasagne.nonlinearities.rectify, pad=0, \
+		network = lasagne.layers.Conv2DLayer(network, num_filters=50, filter_size=(3, 3), \
+		                                     nonlinearity=lasagne.nonlinearities.rectify, pad=1, \
 		                                     stride=(1, 1), untie_biases=True)
 		network = lasagne.layers.MaxPool2DLayer(network, pool_size=(2, 2))
-		network = lasagne.layers.DenseLayer(lasagne.layers.dropout(network, p=0.5), num_units=6000, \
+		network = lasagne.layers.DenseLayer(lasagne.layers.dropout(network, p=0.5), num_units=5000, \
 		                                    nonlinearity=lasagne.nonlinearities.rectify)
 		network = lasagne.layers.DenseLayer(lasagne.layers.dropout(network, p=0.5), num_units=3,  \
 		                                    nonlinearity=lasagne.nonlinearities.softmax)
@@ -86,7 +86,6 @@ class GenerateData:
 
 		# get predictions
 		test_predictions = self.make_prediction(self.data, verbose)
-
 		### Take a look at the predictions with raw tweets
 		self.test_df['prediction'] = test_predictions
 		# lets take a look of the 
