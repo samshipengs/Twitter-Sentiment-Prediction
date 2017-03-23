@@ -13,6 +13,7 @@ from nltk.corpus import stopwords
 import os.path
 import random
 
+from sklearn.preprocessing import StandardScaler
 
 class Data:
 	def __init__(self, file_name, file_path):
@@ -120,6 +121,14 @@ class Data:
 			print "Total {} not in vocab.".format(n_absent)
 			print "Done converting tweets to vec!"	
 			return tweet_vecs
+
+	def standarize(self, tweet_vecs):
+		# tweet_vec: example dim: (8561, 19, 600)
+		n1, n2, n3 = tweet_vecs.shape
+		tweet_vecs = tweet_vecs.reshape(n1, n2*n3)
+		tweet_vecs = StandardScaler(copy=True, with_mean=True, with_std=True).fit_transform(tweet_vecs)
+		tweet_vecs = tweet_vecs.reshape(n1, n2, n3)
+		return tweet_vecs
 
 	# save tweet_vecs to disk in npy
 	def save_vec(self, tweet_vecs, name='default'):
