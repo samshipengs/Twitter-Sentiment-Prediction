@@ -1,8 +1,17 @@
 # This file makes predictions on incoming data and perform basic analysis.
 import pandas as pd
-import lasagne
+
 import theano
 import theano.tensor as T
+from lasagne import layers
+
+from nolearn.lasagne import NeuralNet
+from nolearn.lasagne import visualize
+from nolearn.lasagne import BatchIterator
+
+import lasagne
+from lasagne import layers
+from lasagne.updates import nesterov_momentum
 
 import nltk
 from load_data import Data
@@ -10,6 +19,63 @@ from utils import *
 
 import sys
 import os.path
+
+# define cnn sructure
+def build_cnn(num_epochs=20):
+    net1 = NeuralNet(
+        layers=[('input', layers.InputLayer),
+                ('conv2d1', layers.Conv2DLayer),
+                ('maxpool1', layers.MaxPool2DLayer),
+                ('conv2d2', layers.Conv2DLayer),
+                ('maxpool2', layers.MaxPool2DLayer),
+                ('dropout1', layers.DropoutLayer),
+                ('dense', layers.DenseLayer),
+                ('dropout2', layers.DropoutLayer),
+                ('output', layers.DenseLayer),
+                ],
+        # input layer
+        input_shape=(None, 1, M, D),
+        # layer conv2d1
+        conv2d1_num_filters=50,
+        conv2d1_filter_size=(3, 3),
+        conv2d1_nonlinearity=lasagne.nonlinearities.rectify,
+        conv2d1_W=lasagne.init.GlorotUniform(),  
+        conv2d1_stride=1,
+        conv2d1_pad=1,
+        conv2d1_untie_biases=True,
+        # layer maxpool1
+        maxpool1_pool_size=(2, 2),    
+        # layer conv2d2
+        conv2d2_num_filters=50,
+        conv2d2_filter_size=(3, 3),
+        conv2d2_nonlinearity=lasagne.nonlinearities.rectify,
+        conv2d2_stride=1,
+        conv2d2_pad=1,
+        conv2d2_untie_biases=True,
+        # layer maxpool2
+        maxpool2_pool_size=(2, 2),
+        # dropout1
+        dropout1_p=0.5,    
+        # dense
+        dense_num_units=5000,
+        dense_nonlinearity=lasagne.nonlinearities.rectify,    
+        # dropout2
+        dropout2_p=0.5,    
+        # output
+        output_nonlinearity=lasagne.nonlinearities.softmax,
+        output_num_units=3,
+        # optimization method params
+        update=nesterov_momentum,
+        update_learning_rate=0.01,
+        update_momentum=0.9,
+        # train options
+        train_split = TrainSplit(0.2, stratify=True),
+        batch_iterator_train = BatchIterator(batch_size=50),
+        batch_iterator_test = BatchIterator(batch_size=50),
+        max_epochs=num_epochs,
+        verbose=1,
+        )
+    return net1
 
 # def feed forward pass ftns until dense layer to generate features for svm
 def generate_features(net):
@@ -31,6 +97,7 @@ def extract_features(net, input_data):
     return [f_dense(i.reshape(1,1,n[2],n[3])).flatten() for i in input_data]
 
 
+# def Prediction class used in making predictions on test data
 class Prediction:
 	def __init__(self, file_path, file_name, max_len_train):
 		self.file_path = file_path
@@ -65,22 +132,14 @@ class Prediction:
 			print "N, M, D:", N, M, D
 		data = data.reshape(-1, 1, M, D).astype(theano.config.floatX) # theano needs this way
 
-		input_var = T.tensor4('inputs')
-		target_var = T.ivector('targets')
-		network = self.cnn(M, D, input_var)
+		cnn = build_cnn()
+		model_file = self.file_path+'nn_cnn'
+		cnn.load_params_from(model_file)
 
-		# now load model and do predictions
-		saved_params = load_network(self.file_path, "cnn.npz")
-		lasagne.layers.set_all_param_values(network, saved_params)
+		extract_data = extract_features(cnn, data)
+		clf = joblib.load(self.file_path+'svm-final.pkl')
+		test_pred = clf.predict(extract_data)
 
-		# define prediction function
-		test_prediction = lasagne.layers.get_output(network, deterministic=True)
-		predict_label = T.argmax(test_prediction,axis=1)
-		test_fn = theano.function([input_var], predict_label)
-
-		test_pred = test_fn(data) + 1
-
-		self.test_pred = test_pred
 		return test_pred
 
 	def get_result(self, n_preview=10, n_top = 20, name = 'default', verbose=True):
