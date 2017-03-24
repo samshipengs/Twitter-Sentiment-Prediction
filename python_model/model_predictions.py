@@ -21,7 +21,7 @@ import sys
 import os.path
 
 # define cnn sructure
-def build_cnn(num_epochs=20):
+def build_cnn(M, D, num_epochs=20):
     net1 = NeuralNet(
         layers=[('input', layers.InputLayer),
                 ('conv2d1', layers.Conv2DLayer),
@@ -132,7 +132,7 @@ class Prediction:
 			print "N, M, D:", N, M, D
 		data = data.reshape(-1, 1, M, D).astype(theano.config.floatX) # theano needs this way
 
-		cnn = build_cnn()
+		cnn = build_cnn(M, D)
 		model_file = self.file_path+'nn_cnn'
 		cnn.load_params_from(model_file)
 
