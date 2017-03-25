@@ -112,21 +112,16 @@ class Data:
 			vocabs = model.wv.vocab.keys()
 			for i in range(n):
 				if len(tweet_tokens[i]) == 0:
-					n_total_absent += 1
-
-					diff_i = abs(1 - m)
-					vecs_i = model['none']
-					tweet_vecs[i] = np.lib.pad(vecs_i, ((0,diff_i),(0,0)), 'constant', constant_values=0)
-
+					tweet_tokens[i] = ['none']
+					
+				token_i = [x for x in tweet_tokens[i] if x in vocabs]
+				m_i = len(token_i)
+				if m_i == 0:
+				    n_absent += 1
 				else:
-					token_i = [x for x in tweet_tokens[i] if x in vocabs]
-					m_i = len(token_i)
-					if m_i == 0:
-					    n_absent += 1
-					else:
-						diff_i = abs(m_i - m)
-						vecs_i = model[token_i]
-						tweet_vecs[i] = np.lib.pad(vecs_i, ((0,diff_i),(0,0)), 'constant', constant_values=0)
+					diff_i = abs(m_i - m)
+					vecs_i = model[token_i]
+					tweet_vecs[i] = np.lib.pad(vecs_i, ((0,diff_i),(0,0)), 'constant', constant_values=0)
 			print "Total {} not in vocab.".format(n_absent)
 			print "Total {} has no tweets.".format(n_total_absent)
 			print "Done converting tweets to vec!"	
