@@ -114,7 +114,7 @@ class Data:
 				if len(tweet_tokens[i]) == 0:
 					n_total_absent += 1
 
-					diff_i = abs(0 - m)
+					diff_i = abs(1 - m)
 					vecs_i = model['none']
 					tweet_vecs[i] = np.lib.pad(vecs_i, ((0,diff_i),(0,0)), 'constant', constant_values=0)
 
