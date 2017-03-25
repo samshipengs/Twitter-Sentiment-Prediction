@@ -120,6 +120,7 @@ ALL = Prediction(FILE_PATH, 'air.csv', max_len_train=19)
 ALL.prepare_data(wv_size=600)
 ALL.get_result(n_preview=10, n_top = 20, name='ALL_result',verbose=False)
 ```
+
 ```
 ===Positive===
 [('thanks', 20), ('great', 20), ('everyone', 11), ('sharing', 11), ('news', 11), 
@@ -128,7 +129,8 @@ ALL.get_result(n_preview=10, n_top = 20, name='ALL_result',verbose=False)
 ('beat', 2), ('plugs', 2), ('helpful', 2), ('jet', 2)]
 ```
 ![png](output_2_1.png)
-```
+
+
 ```
 ===Negative===
 [('flight', 173), ('time', 63), ('get', 53), ('thanks', 45), ('service', 42), 
@@ -136,6 +138,7 @@ ALL.get_result(n_preview=10, n_top = 20, name='ALL_result',verbose=False)
 ('plane', 32), ('flights', 32), ('flying', 31), ('one', 31), ('delayed', 31), 
 ('dont', 31), ('travel', 30), ('please', 30), ('home', 29)]
 ```
+
 ![png](output_2_3.png)
 
 
