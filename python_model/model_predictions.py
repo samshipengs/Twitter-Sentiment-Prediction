@@ -8,10 +8,13 @@ from lasagne import layers
 from nolearn.lasagne import NeuralNet
 from nolearn.lasagne import visualize
 from nolearn.lasagne import BatchIterator
+from nolearn.lasagne import TrainSplit
 
 import lasagne
 from lasagne import layers
 from lasagne.updates import nesterov_momentum
+
+from sklearn.externals import joblib
 
 import nltk
 from load_data import Data
@@ -140,7 +143,7 @@ class Prediction:
 		clf = joblib.load(self.file_path+'svm-final.pkl')
 		test_pred = clf.predict(extract_data)
 
-		return test_pred
+		return test_pred + 1
 
 	def get_result(self, n_preview=10, n_top = 20, name = 'default', verbose=True):
 
