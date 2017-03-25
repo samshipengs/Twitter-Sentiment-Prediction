@@ -88,58 +88,76 @@ airline_df.head()
 model gets trained
 
 ```
-    Epoch 18 of 20 took 6.702s
-      training loss:		0.386099
-      validation loss:		0.914334
-      validation accuracy:		64.32 %
-    Epoch 19 of 20 took 6.602s
-      training loss:		0.358274
-      validation loss:		0.956272
-      validation accuracy:		61.40 %
-    Epoch 20 of 20 took 6.606s
-      training loss:		0.317283
-      validation loss:		0.948621
-      validation accuracy:		63.72 %
+train freq [1890 2479 2479]
+val freq [473 620 620]
+Extracting ... 
+Extracting ... 
+Training cv 1 ...
+[LibSVM]0.725627553999
+
+
+train freq [1890 2479 2479]
+val freq [473 620 620]
+Extracting ... 
+Extracting ... 
+Training cv 2 ...
+[LibSVM]0.72270869819
+
+
+train freq [1890 2479 2479]
+val freq [473 620 620]
+Extracting ... 
+Extracting ... 
+Training cv 3 ...
+[LibSVM]0.72270869819
  ```
  then use it to predict on tweets that mentions AirCanada. 
  
  Group the tweets based on the sentiment classified by CNN model, and we can find the most frequent words from each group,
  
 ```python
-AC = GenerateData(FILE_PATH, 'AirCanada.csv', max_len_train=19)
-AC.prepare_data(wv_size=600)
-AC.get_result(n_preview=10, n_top = 20, name='AC_result',verbose=False)
+ALL = Prediction(FILE_PATH, 'air.csv', max_len_train=19)
+ALL.prepare_data(wv_size=600)
+ALL.get_result(n_preview=10, n_top = 20, name='ALL_result',verbose=False)
 ```
 ```
 ===Positive===
-[('great', 8), ('thanks', 7), ('thank', 4), ('home', 3), ('today', 3),
-('help', 2), ('go', 2), ('lounge', 2), ('jetxd', 2), ('lhr', 2), 
-('made', 2), ('yyz', 2), ('bag', 2), ('pbi', 2), ('bad', 2), 
-('working', 2), ('visit', 2), ('service', 2), ('flying', 2), ('time', 2)]
-===Neutral===
-[('flight', 15), ('support', 11), ('travel', 10), ('trip', 9), ('big', 9), 
-('vancouver', 8), ('change', 7), ('fly', 7), ('seat', 7), ('via', 6)]
-===Negative===
-[('flight', 35), ('time', 12), ('hours', 11), ('found', 10), ('worst', 9), 
-('didnt', 9), ('actually', 9), ('board', 9), ('check', 9), ('service', 8), 
-('hrs', 8), ('yvr', 7), ('never', 7), ('already', 7), ('plane', 7), 
-('take', 7), ('delayed', 7), ('customer', 6), ('validb', 6), ('let', 6)]
+[('thanks', 20), ('great', 20), ('everyone', 11), ('sharing', 11), ('news', 11), 
+('thank', 7), ('chicagoseminars', 4), ('amazing', 4), ('howierappaport', 2), ('laptop', 2), 
+('yyz', 2), ('ready', 2), ('service', 2), ('needed', 2), ('much', 2), ('flight', 2), 
+('beat', 2), ('plugs', 2), ('helpful', 2), ('jet', 2)]
 ```
+![png](output_2_1.png)
+```
+===Neutral===
+[('info', 50), ('eduaubdedubu', 50), ('shortcut', 48), ('please', 48), 
+('visit', 48), ('watch', 11), ('roundtrip', 6), ('airfare', 5), ('fuck', 4), ('departing', 3)]
+```
+![png](output_2_3.png)
+```
+===Negative===
+[('flight', 173), ('time', 63), ('get', 53), ('thanks', 45), ('service', 42), 
+('im', 42), ('us', 41), ('great', 41), ('fly', 37), ('hours', 34), ('w', 33), 
+('plane', 32), ('flights', 32), ('flying', 31), ('one', 31), ('delayed', 31), 
+('dont', 31), ('travel', 30), ('please', 30), ('home', 29)]
+```
+
 
 Take a look of the context of some of the most frequent word used in negative grouped tweets,
 ```python
-AC.check(word='worst', sentiment=3, n_view=10)
+ALL.check(word='flight', sentiment=3, n_view=10)
 ```
 ```
-"@AirCanada you are the worst. I paid 4 a flight with a guaranteed seat. but of course u over booked. Now I have a... https://t.co/mxxQfETfH6"
-"@AirCanada you are the worst. I paid 4 a flight with a guaranteed seat. but of course u over booked. Now I have a delay of 6 hours #boycott"
-"@AirCanada you are the worst. Each experience worse than the last.  Too bad we don't have a choice of air carriers."
-"@AirCanada is absolute worst airline. Rude staff, complete incompetence, left bags off flight - then yelled at us for asking after them"
-"Just had the worst service experience ever on @AirCanada, I'll never flight again with you!"
-"RT @mcjackson001: @AirCanada Absolute worst airline I have ever flown!!! NEVER flying them again. Take a cue from @SouthwestAir in the cust…"
-"@AirCanada Absolute worst airline I have ever flown!!! NEVER flying them again. Take a cue from @SouthwestAir in the customer service dept."
-"RT @gattaca: Hey @AirCanada just got off AC973, onboard service was the worst I’ve ever experienced, and I travel 200k per year. Pilot was…"
-"Good morning, @AirCanada. I finally terminated our two-hour call last night after being on hold for 45 minutes. Worst customer service ever."
+"@AmericanAir with that totally random flight cancellation <ed><U+00A0><U+00BD><ed><U+00B1><U+0080>"
+"Baffled by @AmericanAir boarding  passengers with full knowledge that the captain is still on an inbound  flight. SMH. #FAIL"
+"#TFW you finally get off your @AmericanAir flight that taxied for over an hour. <ed><U+00A0><U+00BD><ed><U+00B9><U+008C><ed><U+00A0><U+00BC><ed><U+00BF><U+00BE><ed><U+00A0><U+00BC><ed><U+00BE><U+0089><ed><U+00A0><U+00BC><ed><U+00BE><U+0089><ed><U+00A0><U+00BD><ed><U+00B1><U+008F><ed><U+00A0><U+00BC><ed><U+00BF><U+00BD> https://t.co/TyAlTpAWFC"
+"@AmericanAir unfortunately made the mistake of booking @united, who put me on an @aircanada flight. Next time! <ed><U+00A0><U+00BD><ed><U+00B8><U+0093>"
+"@AmericanAir the flight attend made me stow iPad for landing b/c it "has a keypad". Travel weekly. Never had to stow. Is this new? #AA1164"
+"@AmericanAir I have a question about my seats on upcoming flight."
+"@AmericanAir I joined Twitter to tell people how bad you are! Second time missing a connecting flight in LA but somehow isn't your fault!"
+"RT @RandyStillinger: World War II veterans get a hero's welcome by the #AATeam upon arrival on @AmericanAir #SoaringValor charter flight wi�"
+"At LAS with a colleague waiting for our golf clubs because they missed our flight. Might not make our tee time. Unacceptable @AmericanAir"
+"@AmericanAir I'm not Ralph ;) That's your awesome flight attendant."
 ```
 
 This could help airline to improve on relevant services.
