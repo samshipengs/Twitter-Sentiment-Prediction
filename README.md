@@ -129,7 +129,6 @@ ALL.get_result(n_preview=10, n_top = 20, name='ALL_result',verbose=False)
 ```
 ![png](output_2_1.png)
 ```
-
 ```
 ![png](output_2_3.png)
 ```
