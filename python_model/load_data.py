@@ -114,9 +114,10 @@ class Data:
 				if len(tweet_tokens[i]) == 0:
 					token_i = [x for x in ['none'] if x in vocabs]
 					m_i = len(token_i)
-				
-				token_i = [x for x in tweet_tokens[i] if x in vocabs]
-				m_i = len(token_i)
+				else:
+					token_i = [x for x in tweet_tokens[i] if x in vocabs]
+					m_i = len(token_i)
+					
 				if m_i == 0:
 				    n_absent += 1
 				else:
