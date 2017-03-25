@@ -112,9 +112,8 @@ class Data:
 			vocabs = model.wv.vocab.keys()
 			for i in range(n):
 				if len(tweet_tokens[i]) == 0:
-					tweet_tokens[i] = ['none']
-					
-				token_i = [x for x in tweet_tokens[i] if x in vocabs]
+
+				token_i = [x for x in ['none'] if x in vocabs]
 				m_i = len(token_i)
 				if m_i == 0:
 				    n_absent += 1
