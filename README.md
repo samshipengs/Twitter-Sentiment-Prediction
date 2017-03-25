@@ -129,9 +129,7 @@ ALL.get_result(n_preview=10, n_top = 20, name='ALL_result',verbose=False)
 ```
 ![png](output_2_1.png)
 ```
-===Neutral===
-[('info', 50), ('eduaubdedubu', 50), ('shortcut', 48), ('please', 48), 
-('visit', 48), ('watch', 11), ('roundtrip', 6), ('airfare', 5), ('fuck', 4), ('departing', 3)]
+
 ```
 ![png](output_2_3.png)
 ```
