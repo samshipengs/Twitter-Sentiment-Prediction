@@ -14,11 +14,13 @@ def load_network(filepath, filename):
 		param_values = [f['arr_%d' % i] for i in range(len(f.files))]
 	return param_values
 
-def most_freq(df, class_label, top=10):
+def most_freq(df, class_label, top=10, plot=False):
 	# df should have a colum cotaining tokenized words and a class(prediction) column
 	# class_label here is numeric value
 	df_select = df[df['prediction']==class_label]
 	word_frequency = nltk.FreqDist(i for w in df_select['tokenized'] for i in w)
+	if plot:
+		word_frequency.plot(top)
 	return word_frequency.most_common(top)
 
 def look_up(df_origin, df_test, word, class_label, look=10):

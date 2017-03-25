@@ -109,7 +109,7 @@ class Prediction:
 
 	def prepare_data(self, wv_size=600):
 		test_data = Data(self.file_name, self.file_path)
-		test_df = test_data.csv_df(['text'])
+		test_df = test_data.csv_df(['text', 'Airline'])
 		# make a copy of the original tweets for later use
 		original_df = test_df.copy()
 
@@ -170,12 +170,12 @@ class Prediction:
 
 		# look at most frequent words in different groups
 		print "===Positive==="
-		print most_freq(self.test_df, 1, top=n_top)
+		print most_freq(self.test_df, 1, top=n_top, plot=True)
 		print "===Neutral==="
-		print most_freq(self.test_df, 2)
+		print most_freq(self.test_df, 2, plot=False)
 		print "===Negative==="
-		print most_freq(self.test_df, 3, top=n_top)
+		print most_freq(self.test_df, 3, top=n_top, plot=True)
 
 	def check(self, word, sentiment, n_view=10):
-		# we can take a look of the tweets where the frequent word is mentioned, e.g. lookup 'gate' in negative tweets
+		# we can take a look of the tweets where the frequent word is mentioned, e.g. lookup 'flight' in negative tweets
 		look_up(self.original_df, self.test_df, word, sentiment, look=n_view)
