@@ -130,14 +130,13 @@ ALL.get_result(n_preview=10, n_top = 20, name='ALL_result',verbose=False)
 ![png](output_2_1.png)
 ```
 ```
-![png](output_2_3.png)
-```
 ===Negative===
 [('flight', 173), ('time', 63), ('get', 53), ('thanks', 45), ('service', 42), 
 ('im', 42), ('us', 41), ('great', 41), ('fly', 37), ('hours', 34), ('w', 33), 
 ('plane', 32), ('flights', 32), ('flying', 31), ('one', 31), ('delayed', 31), 
 ('dont', 31), ('travel', 30), ('please', 30), ('home', 29)]
 ```
+![png](output_2_3.png)
 
 
 Take a look of the context of some of the most frequent word used in negative grouped tweets,
