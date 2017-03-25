@@ -107,9 +107,9 @@ class Prediction:
 		self.file_name = file_name
 		self.max_len_train = max_len_train # length of sentence from training
 
-	def prepare_data(self, wv_size=600):
+	def prepare_data(self, data_fields, wv_size=600):
 		test_data = Data(self.file_name, self.file_path)
-		test_df = test_data.csv_df(['text', 'Airline'])
+		test_df = test_data.csv_df(data_fields)
 		# make a copy of the original tweets for later use
 		original_df = test_df.copy()
 
