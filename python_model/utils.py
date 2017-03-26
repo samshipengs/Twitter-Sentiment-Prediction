@@ -27,9 +27,9 @@ def look_up(df_origin, df_test, word, class_label, look=10):
 	# df_origin contains raw tweet text, df_test is pre-processed
 	n = 0
 	for i in range(df_origin.shape[0]):
-		if word in df_test.loc[i, 'tokenized']:
-			if df_test.loc[i, 'prediction'] == class_label:
-				print df_origin.loc[i, 'text']
+		if word in list(df_test['tokenized'])[i]:
+			if list(df_test['prediction'])[i] == class_label:
+				print list(df_origin['text'])[i]
 				n += 1
-		if n == 10:
+		if n == look:
 			break

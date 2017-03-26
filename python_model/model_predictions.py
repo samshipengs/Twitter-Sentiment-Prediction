@@ -166,7 +166,7 @@ class Prediction:
 				print self.original_df.values[i,]
 
 		# save to csv
-		self.original_df.to_csv(name+'.csv')
+		self.original_df.to_csv(name+'.csv', index=False)
 
 		# look at most frequent words in different groups
 		print "===Positive==="

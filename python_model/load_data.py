@@ -103,20 +103,15 @@ class Data:
 			print "Done loading npy file."
 			return tweet_vecs
 		else:
-			tweet_tokens = df['tokenized']
+			tweet_tokens = df['tokenized'].values
 			n = tweet_tokens.shape[0]
 			m = max_length
 			n_absent = 0
-			n_total_absent = 0
 			tweet_vecs = np.zeros((n,m,self.vec_size))
 			vocabs = model.wv.vocab.keys()
 			for i in range(n):
-				try:
-					token_i = [x for x in tweet_tokens[i] if x in vocabs]
-					m_i = len(token_i)
-				except:
-					token_i = [x for x in ['none'] if x in vocabs]
-					m_i = len(token_i)
+				token_i = [x for x in tweet_tokens[i] if x in vocabs]
+				m_i = len(token_i)
 
 				if m_i == 0:
 				    n_absent += 1
@@ -125,7 +120,6 @@ class Data:
 					vecs_i = model[token_i]
 					tweet_vecs[i] = np.lib.pad(vecs_i, ((0,diff_i),(0,0)), 'constant', constant_values=0)
 			print "Total {} not in vocab.".format(n_absent)
-			print "Total {} has no tweets.".format(n_total_absent)
 			print "Done converting tweets to vec!"	
 			return tweet_vecs
 
@@ -179,6 +173,7 @@ class Data:
 			df.drop(col1, inplace=True, axis=1)
 		print "Done converting numeric to categorical, this changes df."
 		return df
+	
 	# balance classes, the method used here is just drop the most number of classes to the 
 	# second most numer of class
 	def balance_class(self, df, random_state=42):
