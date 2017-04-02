@@ -42,6 +42,27 @@ class Data:
 		data_df.dropna(axis=0, inplace=True) # drop na rows
 		return data_df
 
+	# possibly remove bots, but it requires a decision on the score of results, see blow
+	# therefore not used here.
+	# def remove_bots(self, df):
+	# 	# A username can only contain alphanumeric characters (letters A-Z, numbers 0-9) with the exception of underscores
+	# 	import botornot
+
+	# 	twitter_app_auth = {
+	# 	    'consumer_key': 'xxxxxxxx',
+	# 	    'consumer_secret': 'xxxxxxxxxx',
+	# 	    'access_token': 'xxxxxxxxx',
+	# 	    'access_token_secret': 'xxxxxxxxxxx',
+	# 	  }
+	# 	bon = botornot.BotOrNot(**twitter_app_auth)
+
+	# 	# Check a single account
+	# 	result = bon.check_account('@clayadavis')
+
+	# 	# Check a sequence of accounts
+	# 	accounts = ['@clayadavis', '@onurvarol', '@jabawack']
+	# 	results = list(bon.check_accounts_in(accounts))
+
 	# pre-processing text
 	def pre_process(self, df):
 		print("Note: pre-process changes the dataframe inplace.")
