@@ -67,7 +67,7 @@ class Data:
 	def pre_process(self, df):
 		print("Note: pre-process changes the dataframe inplace.")
 		# remove new line char
-		df['text'].replace(regex=True,inplace=True,to_replace=r'\\n',value=r'')
+		df['text'].replace(regex=True,inplace=True,to_replace='(\\n|\\r|\\r\\n)',value='')
 		# remove https links
 		df['text'].replace(regex=True,inplace=True,to_replace=r'(http|https):\/\/[^(\s|\b)]+',value=r'')
 		# remove user name
