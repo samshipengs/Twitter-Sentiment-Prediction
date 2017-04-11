@@ -17,7 +17,7 @@ Analyze sentiment of tweets i.e. positive, negative and neutral by applying *con
 -------------------
 Begin by creating a directory e.g. *twitter_sentiment* for stroing training data, Word2Vec model and CNN model, and set the FILE_PATH to this directory.
 * data: contains training data (airline data in this case) and test data.
-* word2vec: word embedding model is saved here.
+* wordvec: word embedding model is saved here.
 * model: cnn model is saved here.
 
 ### Run
@@ -112,7 +112,7 @@ Training cv 3 ...
 [LibSVM]0.877408056042
 
  ```
- then use it to predict on tweets that mentions AirCanada. 
+ then use it to predict on collected airline tweets. 
  
  Group the tweets based on the sentiment classified by CNN model, and we can find the most frequent words from each group,
  
@@ -129,7 +129,7 @@ ALL.get_result(n_preview=10, n_top = 20, name='ALL_result',verbose=False)
  ('flying', 35), ('much', 34), ('night', 34), ('good', 34), ('always', 32),
  ('us', 31), ('home', 31), ('time', 30), ('last', 30), ('got', 30)]
 ```
-![png](output_2_1.png)
+![png](pos.png)
 
 
 ```
@@ -140,7 +140,7 @@ ALL.get_result(n_preview=10, n_top = 20, name='ALL_result',verbose=False)
  ('us', 78), ('bag', 75), ('flying', 74), ('hours', 72), ('hour', 70)]
 ```
 
-![png](output_2_3.png)
+![png](neg.png)
 
 
 Take a look of the context of some of the most frequent word used in negative grouped tweets,
