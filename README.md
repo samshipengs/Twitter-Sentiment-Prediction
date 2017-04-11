@@ -93,7 +93,7 @@ val freq [473 620 620]
 Extracting ... 
 Extracting ... 
 Training cv 1 ...
-[LibSVM]0.725627553999
+[LibSVM]0.880910683012
 
 
 train freq [1890 2479 2479]
@@ -101,7 +101,7 @@ val freq [473 620 620]
 Extracting ... 
 Extracting ... 
 Training cv 2 ...
-[LibSVM]0.72270869819
+[LibSVM]0.879743140689
 
 
 train freq [1890 2479 2479]
@@ -109,34 +109,35 @@ val freq [473 620 620]
 Extracting ... 
 Extracting ... 
 Training cv 3 ...
-[LibSVM]0.72270869819
+[LibSVM]0.877408056042
+
  ```
  then use it to predict on tweets that mentions AirCanada. 
  
  Group the tweets based on the sentiment classified by CNN model, and we can find the most frequent words from each group,
  
 ```python
-ALL = Prediction(FILE_PATH, 'air.csv', max_len_train=19)
-ALL.prepare_data(wv_size=600)
+ALL = Prediction(FILE_PATH, 'FOUR_AIRLINES.csv', max_len_train=19)
+ALL.prepare_data(['text', 'airline'], wv_size=600)
 ALL.get_result(n_preview=10, n_top = 20, name='ALL_result',verbose=False)
 ```
 
 ```
 ===Positive===
-[('thanks', 20), ('great', 20), ('everyone', 11), ('sharing', 11), ('news', 11), 
-('thank', 7), ('chicagoseminars', 4), ('amazing', 4), ('howierappaport', 2), ('laptop', 2), 
-('yyz', 2), ('ready', 2), ('service', 2), ('needed', 2), ('much', 2), ('flight', 2), 
-('beat', 2), ('plugs', 2), ('helpful', 2), ('jet', 2)]
+[('thanks', 170), ('thank', 139), ('great', 136), ('flight', 120), ('service', 65), 
+ ('love', 48), ('fly', 44), ('crew', 39), ('leggings', 38), ('best', 38), 
+ ('flying', 35), ('much', 34), ('night', 34), ('good', 34), ('always', 32),
+ ('us', 31), ('home', 31), ('time', 30), ('last', 30), ('got', 30)]
 ```
 ![png](output_2_1.png)
 
 
 ```
 ===Negative===
-[('flight', 173), ('time', 63), ('get', 53), ('thanks', 45), ('service', 42), 
-('im', 42), ('us', 41), ('great', 41), ('fly', 37), ('hours', 34), ('w', 33), 
-('plane', 32), ('flights', 32), ('flying', 31), ('one', 31), ('delayed', 31), 
-('dont', 31), ('travel', 30), ('please', 30), ('home', 29)]
+[('flight', 400), ('get', 155), ('stop', 144), ('tickets', 137), ('time', 128),
+ ('seaworld', 127), ('selling', 123), ('via', 122), ('urge', 121), ('service', 108),
+ ('customer', 100), ('still', 95), ('one', 92), ('delayed', 91), ('flights', 83), 
+ ('us', 78), ('bag', 75), ('flying', 74), ('hours', 72), ('hour', 70)]
 ```
 
 ![png](output_2_3.png)

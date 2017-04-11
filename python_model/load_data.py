@@ -67,24 +67,24 @@ class Data:
 	def pre_process(self, df):
 		print("Note: pre-process changes the dataframe inplace.")
 		# remove new line char
-		df['text'].replace(regex=True,inplace=True,to_replace='(\\n|\\r|\\r\\n)',value='')
+		df['text'].replace(regex=True,inplace=True,to_replace='(\\n|\\r|\\r\\n)',value=' ')
 		# remove https links
-		df['text'].replace(regex=True,inplace=True,to_replace=r'(http|https):\/\/[^(\s|\b)]+',value=r'')
+		df['text'].replace(regex=True,inplace=True,to_replace='(http|https):\/\/[^(\s|\b)]+',value=' ')
 		# remove user name
-		df['text'].replace(regex=True,inplace=True,to_replace=r'@\w+',value=r'')
+		df['text'].replace(regex=True,inplace=True,to_replace='@\w+',value=' ')
 		# remove non-alphabet, this includes number and punctuation
-		df['text'].replace(regex=True,inplace=True,to_replace=r'[^a-zA-Z\s]',value=r'')
+		df['text'].replace(regex=True,inplace=True,to_replace='[^a-zA-Z\s]',value=' ')
 		# tokenize each tweets to form sentences.
 		df['tokenized'] = df['text'].apply(lambda row: nltk.word_tokenize(row.lower()))
 		# remove stop words
 		stop_words = stopwords.words('english')
 		add_stop_words = ['amp', 'rt']
 		stop_words += add_stop_words
-		# also remove english names
-		last_names = [x.lower() for x in np.loadtxt(self.FILE_PATH+"last_names.txt", usecols=0, dtype=str)[:5000]]
-		stop_words += last_names
-		first_names = [x.lower() for x in np.loadtxt(self.FILE_PATH+"first_names.txt", usecols=0, dtype=str)]
-		stop_words += first_names
+		# # also remove english names
+		# last_names = [x.lower() for x in np.loadtxt(self.FILE_PATH+"last_names.txt", usecols=0, dtype=str)[:5000]]
+		# stop_words += last_names
+		# first_names = [x.lower() for x in np.loadtxt(self.FILE_PATH+"first_names.txt", usecols=0, dtype=str)]
+		# stop_words += first_names
 		#     print "sample stopping words: ", stop_words[:5]
 		df['tokenized'] = df['tokenized'].apply(lambda x: [item for item in x if item not in stop_words])
 
@@ -117,7 +117,7 @@ class Data:
 
 	# initialize empty arry to fill with vector repsentation
 	def convert2vec(self, df, max_length, model, name='default'):
-		file_name = self.FILE_PATH + name
+		file_name = self.FILE_PATH + 'data/' + name
 		if os.path.isfile(file_name + '.npy'):
 			print "npy already exists, loading ..."
 			tweet_vecs = np.load(file_name + '.npy')
@@ -131,6 +131,8 @@ class Data:
 			tweet_vecs = np.zeros((n,m,self.vec_size))
 			vocabs = model.wv.vocab.keys()
 			for i in range(n):
+				if i%2000 == 0:
+					print ">>> " + str(i) + " tweets converted ..."
 				token_i = [x for x in tweet_tokens[i] if x in vocabs]
 				m_i = len(token_i)
 
@@ -154,7 +156,7 @@ class Data:
 
 	# save tweet_vecs to disk in npy
 	def save_vec(self, tweet_vecs, name='default'):
-		file_name = self.FILE_PATH + name
+		file_name = self.FILE_PATH + 'data/' + name
 		if os.path.isfile(file_name + '.npy') and os.path.isfile(file_name + '.npz'):
 			print "npy already exists."
 		else:

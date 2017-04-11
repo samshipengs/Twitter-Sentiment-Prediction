@@ -136,11 +136,11 @@ class Prediction:
 		data = data.reshape(-1, 1, M, D).astype(theano.config.floatX) # theano needs this way
 
 		cnn = build_cnn(M, D)
-		model_file = self.file_path+'nn_cnn'
+		model_file = self.file_path+'model/nn_cnn1'
 		cnn.load_params_from(model_file)
 
 		extract_data = extract_features(cnn, data)
-		clf = joblib.load(self.file_path+'svm-final.pkl')
+		clf = joblib.load(self.file_path+'model/cnn-svm-final.pkl')
 		test_pred = clf.predict(extract_data)
 
 		return test_pred + 1
