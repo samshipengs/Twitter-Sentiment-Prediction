@@ -1,5 +1,7 @@
 .httr-oauth
 .ipynb_checkpoints
 data
+model
 wordvec
 *.pyc
+!.gitkeep
